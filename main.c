@@ -6,7 +6,7 @@
 /*   By: aberenge <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 19:23:01 by aberenge          #+#    #+#             */
-/*   Updated: 2025/04/24 19:31:49 by aberenge         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:41:18 by aberenge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@ static char	*get_input(void)
 
 	input = readline("$> ");
 	return (input);
+}
+
+static void	process_input(char *input)
+{
+	if (!check_input(input))
+		return ;
 }
 
 int main(int argc, char **argv, char **env)
@@ -35,8 +41,9 @@ int main(int argc, char **argv, char **env)
 		if (!input)
 			break ;
 		if (*input)
-			printf("%s\n", input);
+			process_input(input);
 		free(input);
 	}
+	printf("exit\n");
 	return (0);
 }

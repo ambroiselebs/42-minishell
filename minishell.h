@@ -6,7 +6,7 @@
 /*   By: aberenge <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 17:18:27 by aberenge          #+#    #+#             */
-/*   Updated: 2025/04/24 19:28:41 by aberenge         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:40:33 by aberenge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,8 @@ typedef struct s_cmd
 	char	*path;
 	char	**args;
 }	t_cmd;
+
+/** Verifications input */
+int		check_input(char *input);
 
 #endif
