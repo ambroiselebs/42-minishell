@@ -6,31 +6,55 @@
 /*   By: aberenge <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 17:18:27 by aberenge          #+#    #+#             */
-/*   Updated: 2025/04/24 17:25:06 by aberenge         ###   ########.fr       */
+/*   Updated: 2025/04/24 19:28:41 by aberenge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef MINISHELL_H
+# define MINISHELL_H
+
+# include <stdio.h>
+# include <stdlib.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include <unistd.h>
+# include <fcntl.h>
+# include <sys/wait.h>
+# include <signal.h>
+# include <sys/stat.h>
+# include "libft.h"
+# include "get_next_line.h"
+
+# define MAX_LINE 1024
+
+# define WORD 0
+# define PIPE 1
+# define REDIR_IN 2
+# define REDIR_OUT 3
+# define APPEND 4
+# define HEREDOC 5
+
 typedef struct s_redir
 {
-	char	*file;
-	int		type;
-	t_redir	*next;
+	char			*file;
+	int				type;
+	struct s_redir	*next;
 }	t_redir;
 
 
 typedef struct s_env
 {
-	char	*name;
-	char	*value;
-	int		equal_sign;
-	t_env	*next;
+	char			*name;
+	char			*value;
+	int				equal_sign;
+	struct s_env	*next;
 }	t_env;
 
 typedef struct s_token
 {
-	char	*value;
-	int		type;
-	t_token	*next;
+	char			*value;
+	int				type;
+	struct s_token	*next;
 }	t_token;
 
 typedef struct s_cmd
@@ -39,3 +63,5 @@ typedef struct s_cmd
 	char	*path;
 	char	**args;
 }	t_cmd;
+
+#endif
