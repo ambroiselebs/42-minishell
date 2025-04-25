@@ -35,6 +35,9 @@ SRCS			= main.c src/clean.c \
 					src/parsing/parse_args.c src/parsing/parse_free.c \
 					src/parsing/parse_path.c src/parsing/parse_redir.c \
 					src/parsing/parse.c src/parsing/parse_utils.c \
+					src/exec/exec_cmd.c src/exec/exec.c \
+					src/exec/heredoc.c src/exec/pipe.c \
+					src/exec/signals.c src/exec/utils.c \
 					libs/utils/ft_is_path.c libs/utils/ft_env_utils.c \
 					libs/utils/ft_env_utils2.c \
 					src/builtin/buitlin.c \

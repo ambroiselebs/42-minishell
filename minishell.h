@@ -6,7 +6,7 @@
 /*   By: aberenge <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 17:18:27 by aberenge          #+#    #+#             */
-/*   Updated: 2025/04/25 01:35:36 by aberenge         ###   ########.fr       */
+/*   Updated: 2025/04/25 18:02:49 by aberenge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,10 +24,14 @@
 # include <sys/wait.h>
 # include <signal.h>
 # include <sys/stat.h>
+# include <limits.h>
+# include <termios.h>
+# include <sys/ioctl.h>
 # include "libft.h"
 # include "get_next_line.h"
 
 # define MAX_LINE 1024
+# define PATH_MAX 1024
 
 # define RED "\033[0;31m"
 # define RESET "\033[0m"
@@ -76,6 +80,11 @@ extern int	g_return_code;
 
 /** Utils */
 int		ft_is_path(char c);
+void	free_array(char **array);
+int		print_error(char *cmd, char *error);
+int		get_max_fd(void);
+void	close_all_fds(void);
+char	*validate_executable(char *cmd_path);
 
 /** Fonctions de netoyage */
 void	free_tokens(t_token	*tokens);
@@ -141,11 +150,48 @@ int		finalize_commands(t_cmd *cmd_list, t_env *env);
 
 t_cmd	*parse(t_token *tokens, t_env **env);
 
-//buitlin.c
-int		check_builtin(t_cmd *cmd);
-void	exec_builtin(t_cmd *cmd, char ***env);
+/** Signals */
+void	setup_signals_shell(void);
+void	setup_signals_heredoc(void);
+void	setup_signals_exec(void);
+void	setup_signals_child(void);
 
-// env.c
+/** Heredoc */
+char	*process_heredoc(char *delimiter);
+int		prepare_heredocs(t_cmd *cmd);
+int		prepare_all_heredocs(t_cmd *cmd_list);
+
+/** Execution */
+int		exec_shell(t_cmd *cmd, t_env **env);
+int		execute_commands(t_cmd *cmd_list, t_env **env_list);
+int		execute_simple_command(t_cmd *cmd, t_env **env_list);
+int		execute_external_command(t_cmd *cmd, t_env *env_list);
+int		execute_builtin(t_cmd *cmd, t_env **env_list);
+void	execute_forked_builtin(t_cmd *cmd, t_env **env_list);
+void	child_process(t_cmd *cmd, t_env **env_list, int *pipes, int i);
+int		prepare_execution(t_cmd *cmd_list);
+
+/** Pipes */
+int		create_pipes(int **pipes, int pipe_count);
+void	setup_pipes(int *pipes, int i);
+void	close_all_pipes(int *pipes);
+void	wait_for_children(pid_t *pids, int count);
+int		execute_pipeline(t_cmd *cmd_list, int pipe_count, t_env **env_list);
+char	**env_to_array(t_env *env_list);
+
+/** Builtins */
+/* int		check_builtin(t_cmd *cmd);
+int		ft_echo(char **args);
+int		ft_cd(char **args, t_env **env_list);
+int		ft_pwd(void);
+int		ft_export(char **args, t_env **env_list);
+void	sort_env(t_env **env_array, int size);
+void	print_export_env(t_env **env_array, int size);
+int		ft_unset(char **args, t_env **env_list);
+int		ft_env(t_env *env_list);
+int		ft_exit(char **args); */
+
+/** Environment */
 t_env	*env_new_var(char *name, char *value, int equal_sign);
 void	env_add_back(t_env **env, t_env *new);
 void	env_init(t_env **env_list, char **env);
