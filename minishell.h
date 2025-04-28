@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpapin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: aberenge <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/24 17:18:27 by aberenge          #+#    #+#             */
-/*   Updated: 2025/04/27 14:26:08 by mpapin           ###   ########.fr       */
+/*   Updated: 2025/04/28 13:04:27 by aberenge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ typedef struct s_cmd
 }	t_cmd;
 
 extern int	g_return_code;
-extern int	g_heredoc_interrupted;
 
 /** Utils */
 int		ft_is_path(char c);
@@ -171,7 +170,6 @@ t_env	*env_new_var(char *name, char *value, int equal_sign);
 void	env_add_back(t_env **env, t_env *new);
 void	env_init(t_env **env_list, char **env);
 char	*get_env_value(t_env *env_list, char *name);
-void	set_env_value(t_env *env_list, char *name, char *value);
 void	unset_env_var(t_env **env_list, char *name);
 int		var_exists(t_env *env, char *var);
 void	update_var(t_env *env, char *name, char *value, int equal);
@@ -180,6 +178,7 @@ char	*get_value(char *str);
 void	sort_env(t_env **var, int size);
 int		env_len(t_env *env);
 char	*clean_quotes(char *value);
+t_env	*create_env_node(const char *name, const char *value);
 
 // export.c
 void	ft_export(char **args, t_env **env);
@@ -192,6 +191,21 @@ void	ft_history(void);
 
 // Execution
 void	exec(t_cmd *cmd, t_env **env);
+void	execute_simple_command(t_cmd *cmd, t_env **env);
+void	execute_piped_commands(t_cmd *cmd_list, t_env *env);
+void	execute_command(t_cmd *cmd, t_env *env);
+void	handle_builtin(t_cmd *cmd, t_env **env);
+void	handle_fork_error(void);
+void	wait_for_child(pid_t pid);
+void	handle_redir_only(t_cmd *cmd);
+void	handle_input_pipe(int prev_pipe);
+void	handle_output_pipe(int *pipe_fd);
+void	execute_piped_child(t_cmd *cmd, t_env *env, int prev_pipe, int *pipe_fd);
+void	update_pipe_status(int *prev_pipe, int *pipe_fd, t_cmd *current);
+void	wait_for_all_children(t_cmd *cmd_list);
+char	**env_to_array(t_env *env);
+char	**fill_env_array(t_env *env, char **env_array);
+void	free_child(t_cmd *cmd, t_env *env);
 
 // Signals
 void	setup_signals_interactive(void);

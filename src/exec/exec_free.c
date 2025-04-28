@@ -1,27 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   exec_free.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mpapin <marvin@42.fr>                      +#+  +:+       +#+        */
+/*   By: aberenge <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/27 14:23:17 by mpapin            #+#    #+#             */
-/*   Updated: 2025/04/28 12:57:12 by mpapin           ###   ########.fr       */
+/*   Created: 2025/04/28 11:03:18 by aberenge          #+#    #+#             */
+/*   Updated: 2025/04/28 13:05:09 by aberenge         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_unset(t_cmd *cmd, t_env **env)
+void	free_child(t_cmd *cmd, t_env *env)
 {
-	int	i;
-
-	i = 1;
-	if (!cmd->args[i])
-		return ;
-	while (cmd->args[i])
-	{
-		unset_env_var(env, cmd->args[i]);
-		i++;
-	}
+	free_commands(cmd);
+	free_env(env);
+	close(0);
+	close(1);
+	close(2);
 }
